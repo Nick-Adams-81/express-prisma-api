@@ -15,23 +15,26 @@ router.get("/users", async (req, res) => {
   try {
     const users = await prisma.user.findMany({})
     res.json(users)
-  } catch(err) {
+  } catch (err) {
     console.log(err)
   }
-  
+
 })
 
 router.get("/users/:id", async (req, res) => {
-  const { id } = req.params
-  const user = await prisma.user.findUnique({
-    where: {
-      id: Number(id)
-    }
-  })
-  res.json(user)
+  try {
+    const { id } = req.params
+    const user = await prisma.user.findUnique({
+      where: {
+        id: Number(id)
+      }
+    })
+    res.json(user)
+  } catch (err) {
+    console.log(err)
+  }
 })
 
-// http:// localhost:3000/api/newUser
 router.post("/newUser", async (req, res) => {
   try {
     const data = req.body
@@ -39,17 +42,27 @@ router.post("/newUser", async (req, res) => {
       data: data
     })
     res.json(user)
-  } catch(err) {
+  } catch (err) {
     console.log(err)
   }
 })
 
-router.delete("/deleteUsers", async (req, res) => {
-  res.send({ message: "api delete users route is working"})
+router.delete("/deleteUser/:id", async (req, res) => {
+  try {
+    const { id } = req.params
+    const deletedUser = await prisma.user.delete({
+      where: {
+        id: Number(id)
+      }
+    })
+    res.json(deletedUser)
+  } catch (err) {
+    console.log(err)
+  }
 })
 
 router.patch("/updateUsers", async (req, res) => {
-  res.send({ message: "api patch users route is working"})
+  res.send({ message: "api patch users route is working" })
 })
 
 module.exports = router;
