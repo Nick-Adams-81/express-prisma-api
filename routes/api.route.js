@@ -21,6 +21,15 @@ router.get("/users", async (req, res) => {
 
 })
 
+router.get("/posts", async (req, res) => {
+  try {
+    const posts = await prisma.posts.findMany({})
+    res.json(posts)
+  } catch (err) {
+    console.log(err)
+  }
+})
+
 router.get("/users/:id", async (req, res) => {
   try {
     const { id } = req.params
@@ -35,6 +44,20 @@ router.get("/users/:id", async (req, res) => {
   }
 })
 
+router.get("/posts/:id", async (req, res) => {
+  try {
+    const { id } = req.params
+    const post = await prisma.posts.findUnique({
+      where: {
+        id: Number(id)
+      }
+    })
+    res.json(post)
+  } catch (err) {
+    console.log(err)
+  }
+})
+
 router.post("/newUser", async (req, res) => {
   try {
     const data = req.body
@@ -42,6 +65,18 @@ router.post("/newUser", async (req, res) => {
       data: data
     })
     res.json(user)
+  } catch (err) {
+    console.log(err)
+  }
+})
+
+router.post("/newPost", async (req, res) => {
+  try {
+    const data = req.body
+    const post = await prisma.posts.create({
+      data: data
+    })
+    res.json(post)
   } catch (err) {
     console.log(err)
   }
@@ -71,7 +106,7 @@ router.patch("/updateUser/:id", async (req, res) => {
       data: req.body
     })
     res.json(user)
-  } catch(err) {
+  } catch (err) {
     console.log(err)
   }
 })
