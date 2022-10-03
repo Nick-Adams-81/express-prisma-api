@@ -23,8 +23,18 @@ router.get("/users", async (req, res) => {
   
 })
 
+// http:// localhost:3000/api/newUser
 router.post("/newUser", async (req, res) => {
-  res.send({ message: "api create users route is working"})
+  try {
+    // username, email
+    const data = req.body
+    const user = await prisma.user.create({
+      data: data
+    })
+    res.json(user)
+  } catch(err) {
+    console.log(err)
+  }
 })
 
 router.delete("/deleteUsers", async (req, res) => {
