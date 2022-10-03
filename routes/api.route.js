@@ -61,8 +61,19 @@ router.delete("/deleteUser/:id", async (req, res) => {
   }
 })
 
-router.patch("/updateUsers", async (req, res) => {
-  res.send({ message: "api patch users route is working" })
+router.patch("/updateUser/:id", async (req, res) => {
+  try {
+    const { id } = req.params
+    const user = await prisma.user.update({
+      where: {
+        id: Number(id)
+      },
+      data: req.body
+    })
+    res.json(user)
+  } catch(err) {
+    console.log(err)
+  }
 })
 
 module.exports = router;
