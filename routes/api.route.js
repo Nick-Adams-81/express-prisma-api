@@ -13,20 +13,27 @@ router.get('/', async (req, res, next) => {
 
 router.get("/users", async (req, res) => {
   try {
-    res.send({ message: "users route working!"})
     const users = await prisma.user.findMany({})
     res.json(users)
-    
   } catch(err) {
     console.log(err)
   }
   
 })
 
+router.get("/users/:id", async (req, res) => {
+  const { id } = req.params
+  const user = await prisma.user.findUnique({
+    where: {
+      id: Number(id)
+    }
+  })
+  res.json(user)
+})
+
 // http:// localhost:3000/api/newUser
 router.post("/newUser", async (req, res) => {
   try {
-    // username, email
     const data = req.body
     const user = await prisma.user.create({
       data: data
